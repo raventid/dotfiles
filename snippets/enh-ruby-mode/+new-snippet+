@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: rbp
+# key: rbp
+# --
+require "pry"; binding.pry
