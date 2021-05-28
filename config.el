@@ -19,7 +19,10 @@
 ;;
 ;; They all accept either a font-spec, font string ("Input Mono-12"), or xlfd
 ;; font string. You generally only need these two:
+;; (setq doom-font (font-spec :family "monospace" :size 12 :weight 'semi-light)
+;;       doom-variable-pitch-font (font-spec :family "sans" :size 13))
 (setq doom-font (font-spec :family "JetBrains Mono" :size 13))
+
 
 ;; There are two ways to load a theme. Both assume the theme is installed and
 ;; available. You can either set `doom-theme' or manually load a theme with the
@@ -32,13 +35,13 @@
 
 ;; This determines the style of line numbers in effect. If set to `nil', line
 ;; numbers are disabled. For relative line numbers, set this to `relative'.
-(setq display-line-numbers-type 'relative)
+(setq display-line-numbers-type t)
 
 
 ;; Here are some additional functions/macros that could help you configure Doom:
 ;;
 ;; - `load!' for loading external *.el files relative to this one
-;; - `use-package' for configuring packages
+;; - `use-package!' for configuring packages
 ;; - `after!' for running code after a package has loaded
 ;; - `add-load-path!' for adding directories to the `load-path', relative to
 ;;   this file. Emacs searches the `load-path' when you load packages with
@@ -46,36 +49,22 @@
 ;; - `map!' for binding new keys
 ;;
 ;; To get information about any of these functions/macros, move the cursor over
-;; the highlighted symbol at press 'K' (non-evil users must press 'C-c g k').
+;; the highlighted symbol at press 'K' (non-evil users must press 'C-c c k').
 ;; This will open documentation for it, including demos of how they are used.
 ;;
-;; You can also try 'gd' (or 'C-c g d') to jump to their definition and see how
+;; You can also try 'gd' (or 'C-c c d') to jump to their definition and see how
 ;; they are implemented.
 
-
-;; Exit editing mode by pressing `fd', was `jk` by default
 (setq-default evil-escape-key-sequence "fd")
 
 (map! :leader :desc "M-x alias" ";" 'execute-extended-command)
 (map! :leader :desc "Eval expression" ":" 'pp-eval-expression)
 
-;; Fix behaviour of dap-debugger for Ruby
-;; https://github.com/emacs-lsp/dap-mode/issues/206
-;; Original package defines wrong path.
-;; Now ruby debug ide uses `dist' instead of `out' path
-;;
-;; Solution below does not work for some obscure reason: cannot find file or permission denied
-;; Ok, we'll just patch original package.
-;; Using find-variable, you should find `dap-ruby-debug-program'
-;; Change path. Profit.
+(setq! coq-compile-before-require t)
 
-;; (custom-set-variables
-;;        ;; custom-set-variables was added by Custom.
-;;        ;; If you edit it by hand, you could mess it up, so be careful.
-;;        ;; Your init file should contain only one such instance.
-;;        ;; If there is more than one, they won't work right.
-;;       '(dap-ruby-debug-program '("/Users/juliankulesh/.emacs.d/.local/etc/dap-extension/vscode/rebornix.Ruby/extension/dist/debugger/main.js")))
-;;
+(setq doom-modeline-height 3)
+(set-face-attribute 'mode-line nil :family "JetBrains Mono" :height 3)
+(set-face-attribute 'mode-line-inactive nil :family "JetBrains Mono" :height 3)
 
 ;; require ('dired)
 (defun ruby-jump-to-gem (dummy)
@@ -90,37 +79,10 @@
               ))
    ))
 
-;; Jump to Ruby container dependency
-(defun dry-container-jump ()
-  ; (if it's a function -> find definition above and jump to definition)
-  ; (if it's not a function, but a dependency string, jump directly to the place)
-  ; (TODO: What if container autorequiring + changing path?)
-  ; (TODO: What to do with local shadowing of dependency names)
-  (message "To be done")
-  )
-
-;; Custom language settings
-(use-package! reason-mode
-  :mode "\\.re$"
-  :hook
-  (before-save . (lambda ()
-                   (when (equal major-mode 'reason-mode)
-                     (refmt)))))
-
-
 ;; Agda-mode straight from OS X intstallation
 (load-file (let ((coding-system-for-read 'utf-8))
              (shell-command-to-string "agda-mode locate")))
 
-
-;; (lsp-register-client
-;;  (make-lsp-client :new-connection (lsp-stdio-connection "/Users/juliankulesh/Downloads/rls-macos/reason-language-server")
-;;                   :major-modes '(reason-mode)
-;;                   :notification-handlers (ht ("client/registerCapability" 'ignore))
-;;                   :priority 1
-;;                   :server-id 'reason-ls))
-
-;; (load "~/.doom.d/arkanoid")
 
 (load "~/.doom.d/ats/ats2-mode")
 (load "~/.doom.d/ats/flycheck-ats2")
